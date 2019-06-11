@@ -1,5 +1,5 @@
-
 #Created by Jonathan Woolf jwool003@ucr.edu
+
 import serial
 import serial.tools.list_ports
 import time
