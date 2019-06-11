@@ -22,7 +22,8 @@ sudo vim my-newrule.rules
 KERNEL=="ttyACM0", MODE="0666"
 
 ## Tutorial:
-#### Access gpsData()
+#### Access gpsData():
+
   import gps
   gps.gpsData(serialPort)
 #### Run example script
