@@ -35,6 +35,8 @@ def utcToPT(utc):
         PT = PT - 240000
         if(PT < 10000):
             PT = "00" + str(PT)
+        elif(PT < 100000):
+            PT = "0" + str(PT)
     return(str(PT))
 
 def decimalDegrees(dms, direction):
