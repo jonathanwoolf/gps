@@ -10,13 +10,13 @@ try / except block and the return statement is printed to terminal. Type 'ctrl c
 to guarantee that the serial port is clsoed when you end the program
 
 ## Give yourself permanent access to the port:
-### Discover which serial port is in use
+#### Discover which serial port is in use
 python -m serial.tools.list_ports
-### navigate to rules.d directory
+#### navigate to rules.d directory
 cd /etc/udev/rules.d
-### create a new rule file
+#### create a new rule file
 sudo touch my-newrule.rules
-### open the file
+#### open the file
 sudo vim my-newrule.rules
-### add the following
+#### add the following
 KERNEL=="ttyACM0", MODE="0666"

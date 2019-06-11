@@ -4,7 +4,9 @@ import serial
 import serial.tools.list_ports
 import time
 
+#Pass in UTC string, output PT string
 def utcToPT(utc):
+    #PT is 17hours ahead of UTC
     PT = 170000 + int(float(utc))
     if(PT >= 240000):
         PT = PT - 240000
@@ -14,6 +16,7 @@ def utcToPT(utc):
             PT = "0" + str(PT)
     return(str(PT))
 
+#Pass in DMS and direction, output DD
 def decimalDegrees(dms, direction):
     DD = int(float(dms)/100)
     SS = float(dms) - DD * 100
@@ -33,20 +36,27 @@ def decimalDegrees(dms, direction):
 def gpsData(GPS, startTime = -1):
     data = [-1] * 3
     sec = -1
-    timestamp =  time.strftime('%H:%M:%S') #"00:00:00" #If time library is unavailable
-    while(data[0] != "$GPRMC"):
+
+    while(data[0] != "$GPGGA"):
         line = GPS.readline()
         data = line.decode().split(",")
-        #find pacific time from UTC & create timestamp
-        if(data[0] == "$GPGGA"):
+
+    if(data[0] == "$GPGGA"):
+        #Fix quality: 0 = invalid
+        if(data[6] != "0"):
+            #data[1] returns time in UTC, convert it to PT and create a timestamp
             PT = utcToPT(data[1])
             hour = PT[0] + PT[1]
             min = PT[2] + PT[3]
             sec = PT[4] + PT[5]
             timestamp = hour + ':' + min + ':' + sec
 
+    while(data[0] != "$GPRMC"):
+        line = GPS.readline()
+        data = line.decode().split(",")
+
     if(data[0] == "$GPRMC"):
-        #A means that the GPS is updating properly and returning a real value
+        #Status A=active or V=Void
         if(data[2] == "A"):
             #Convert from DMS (degrees, minutes, seconds) to DD (decimal degrees)
             latitude = decimalDegrees(data[3], data[4])
