@@ -1,5 +1,7 @@
 # Author: Jonathan Woolf jwool003@ucr.edu
 
+<a href="https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=sr_1_8?keywords=gps+usb&qid=1560277792&s=gateway&sr=8-8">G-Mouse-GLONASS-Receiver</a>
+
 This code reads data from the serial port connected to your GPS device,
 for example "ttyACM0", and calls the function "gpsData()" which reads the serial
 port to return latitude, longitude, MPH, and a timestamp. The function also
