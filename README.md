@@ -23,8 +23,16 @@ KERNEL=="ttyACM0", MODE="0666"
 
 ## Tutorial:
 #### Access gpsData():
-
-  import gps
-  gps.gpsData(serialPort)
+   MOSI: 11
+   MISO: 12
+   SCK: 13
+       import gps
+          gps.gpsData(serialPort)
 #### Run example script
 python example.py
+
+You should connect the SPI pins of the nRF24L01+ to the Arduino according to the Arduino docs. For example, for the Arduino Uno (see <http://arduino.cc/en/Main/arduinoBoardUno>):
+
+    MOSI: 11
+    MISO: 12
+    SCK: 13
