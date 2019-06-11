@@ -12,7 +12,6 @@ to guarantee that the serial port is closed when you end the program.
 
 ## Give yourself permanent access to the port:
     # Discover which serial port is in use
-    - ![#c5f015](https://placehold.it/15/c5f015/000000?text=+) `#c5f015`
     python -m serial.tools.list_ports
     # Navigate to rules.d directory
     cd /etc/udev/rules.d
