@@ -23,8 +23,7 @@ KERNEL=="ttyACM0", MODE="0666"
 
 ## Tutorial:
 #### Access gpsData()
-import gps
-
-gps.gpsData(serialPort)
+  import gps
+  gps.gpsData(serialPort)
 #### Run example script
 python example.py
