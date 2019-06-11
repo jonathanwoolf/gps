@@ -5,13 +5,14 @@ for example "ttyACM0", and calls the function "gpsData()" which reads the serial
 port to return latitude, longitude, MPH, and a timestamp. The function also
 outputs data to pos.txt, log.txt, and speed.txt (when speed > 0 MPH).
 
+ <font color="green">This is some text!</font>
+ 
 For convenience, the function is called in an infinite loop nested in a
 try / except block and the return statement is printed to terminal. Type 'ctrl c'
 to guarantee that the serial port is closed when you end the program.
 
 ## Give yourself permanent access to the port:
     # Discover which serial port is in use
-    <font color="green">This is some text!</font>
     python -m serial.tools.list_ports
     # Navigate to rules.d directory
     cd /etc/udev/rules.d
