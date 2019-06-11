@@ -1,5 +1,7 @@
 #Created by Jonathan Woolf jwool003@ucr.edu
 
+import serial.tools.list_ports
+
 #Global scope
 startTime = -1
 
@@ -32,7 +34,31 @@ def decimalDegrees(dms, direction):
         DD = DD * -1
     return(DD)
 
-def gpsData(GPS):#, startTime = -1):
+#Opens port and resets log and speed text files
+def serialPortInit():
+    #create a list of accessible ports
+    port = ([comport.device for comport in serial.tools.list_ports.comports()])
+
+    #If no ports are accessible exit
+    if(len(port) == 0):
+        print("Error: GPS unit not found!")
+        exit()
+
+    #Open port
+    port = serial.Serial(port[0], baudrate = 9600)
+
+    #Verify port is open
+    if(port.is_open):
+        print(port.name, "is open!")
+        #Reset log and speed files every time the python script starts
+        with open("log.txt", "w") as log:
+            log.write("latitude, longitude, timestamp\n")
+        with open("speed.txt", "w") as spd:
+            spd.close()
+        return(port)
+
+#Pass in active serial port, output: latitude, longitude, MPH, and timestamp
+def gpsData(GPS):
     global startTime
     data = [-1] * 3
     sec = -1

@@ -24,6 +24,7 @@ to guarantee that the serial port is closed when you end the program.
 ## Tutorial:
 #### Access gpsData()
     import gps
-    gps.gpsData(serialPort)
+    port = gps.serialPortInit()
+    gps.gpsData(port)
 #### Run example script
     python example.py
