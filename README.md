@@ -7,7 +7,7 @@ outputs data to pos.txt, log.txt, and speed.txt.
 
 For convenience, the function is called in an infinite loop nested in a
 try / except block and the return statement is printed to terminal. Type 'ctrl c'
-to guarantee that the serial port is clsoed when you end the program
+to guarantee that the serial port is closed when you end the program
 
 ## Give yourself permanent access to the port:
 #### Discover which serial port is in use
