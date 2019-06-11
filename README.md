@@ -1,6 +1,6 @@
 # Author: Jonathan Woolf jwool003@ucr.edu
 
-This code reads data from the linux serial port connected to your GPS device,
+This code reads data from the serial port connected to your GPS device,
 for example "ttyACM0", and calls the function "gpsData()" which reads the serial
 port to return latitude, longitude, MPH, and a timestamp. The function also
 outputs data to pos.txt, log.txt, and speed.txt.
