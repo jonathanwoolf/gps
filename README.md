@@ -18,7 +18,7 @@ to guarantee that the serial port is closed when you end the program.
     sudo touch my-newrule.rules
     # open the file
     sudo vim my-newrule.rules
-    # add the following
+    # add the following:
     #KERNEL=="ttyACM0", MODE="0666"
 
 ## Tutorial:
