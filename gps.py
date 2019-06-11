@@ -1,8 +1,7 @@
 #Created by Jonathan Woolf jwool003@ucr.edu
 
-import serial
-import serial.tools.list_ports
-import time
+#Global scope
+startTime = -1
 
 #Pass in UTC string, output PT string
 def utcToPT(utc):
@@ -33,7 +32,8 @@ def decimalDegrees(dms, direction):
         DD = DD * -1
     return(DD)
 
-def gpsData(GPS, startTime = -1):
+def gpsData(GPS):#, startTime = -1):
+    global startTime
     data = [-1] * 3
     sec = -1
 
@@ -50,6 +50,8 @@ def gpsData(GPS, startTime = -1):
             min = PT[2] + PT[3]
             sec = PT[4] + PT[5]
             timestamp = hour + ':' + min + ':' + sec
+            if(startTime == -1):
+                startTime = int(sec)
 
     while(data[0] != "$GPRMC"):
         line = GPS.readline()
@@ -73,7 +75,7 @@ def gpsData(GPS, startTime = -1):
                 pos.write("latitude, longitude, timestamp\n" + str(latitude)
                 + ", " + str(longitude) +  ", " + timestamp + "\n")
             #write latitude, longitude, and timestamp to log.txt file every 60 seconds
-            if((startTime != -1) and (abs(int(sec) - startTime) == 0)):
+            if(abs(int(sec) - startTime) == 0):
                 with open("log.txt", "a") as log:
                     log.write(str(latitude) + ", " + str(longitude) + ", " + timestamp + "\n")
             #return latitude, longitude, and timestamp
@@ -84,41 +86,3 @@ def gpsData(GPS, startTime = -1):
                 backup = pos.read().split('\n')
                 backup = backup[1].split(", ")
                 return(float(backup[0]), float(backup[1]), 'N/A', backup[2])
-
-#create a list of accessible ports
-port = ([comport.device for comport in serial.tools.list_ports.comports()])
-
-#If no ports are accessible exit
-if(len(port) == 0):
-    print("Error: GPS unit not found!")
-    exit()
-
-#Open GPS port
-GPS = serial.Serial(port[0], baudrate = 9600)
-
-#Verify port is open
-if(GPS.is_open):
-    print(GPS.name, "is open!")
-    #Reset log every time the python script starts
-    with open("log.txt", "w") as log:
-        log.write("latitude, longitude, timestamp\n")
-    with open("speed.txt", "w") as spd:
-        spd.close()
-        #.write("latitude, longitude, timestamp\n")
-
-#Set startTime
-startTime = int(time.strftime('%S'))
-
-#Infinite loop until KeyboardInterrupt is detected
-try:
-    while True:
-        pos = gpsData(GPS, startTime)
-        print(pos)
-        #time.sleep(5) #Sleep for better power reserve if needed
-
-#'ctrl c' will close the serial port before exiting the program
-except KeyboardInterrupt:
-        GPS.close()
-        if(GPS.is_open == False):
-            print()
-            print(GPS.name, "is closed!")
