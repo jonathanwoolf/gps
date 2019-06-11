@@ -11,6 +11,7 @@ to guarantee that the serial port is closed when you end the program.
 
 ## Give yourself permanent access to the port:
     # Discover which serial port is in use
+    <font color="green">This is some text!</font>
     python -m serial.tools.list_ports
     # Navigate to rules.d directory
     cd /etc/udev/rules.d
