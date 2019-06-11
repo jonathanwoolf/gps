@@ -12,13 +12,13 @@ to guarantee that the serial port is closed when you end the program.
 ## Give yourself permanent access to the port:
     # Discover which serial port is in use
     python -m serial.tools.list_ports
-    # navigate to rules.d directory
+    # Navigate to rules.d directory
     cd /etc/udev/rules.d
-    # create a new rule file
+    # Create a new rule file
     sudo touch my-newrule.rules
-    # open the file
+    # Open the file
     sudo vim my-newrule.rules
-    # add the following:
+    # Add the following:
     #KERNEL=="ttyACM0", MODE="0666"
 
 ## Tutorial:
