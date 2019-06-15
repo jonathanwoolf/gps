@@ -4,6 +4,6 @@
 #ignore all html files
 *.html
 
-#ignore
+#ignore pycache
 *.pyc
 __pycache__
