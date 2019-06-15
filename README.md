@@ -18,6 +18,8 @@ For convenience, the function in the example script is called whithin an infinit
     #KERNEL=="ttyACM0", MODE="0666"
 
 ## Tutorial:
+#### Dependencies
+    pip install PYserial
 #### Access gpsData()
     import gps
     port = gps.serialPortInit()
