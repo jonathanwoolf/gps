@@ -1,13 +1,30 @@
-#Created by Jonathan Woolf jwool003@ucr.edu
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+"""
+Module to interact w/ NMEA 0183 compatible USB GPS receivers
+GPL 3.0
+"""
+
+# Built-in/Generic Imports
 import serial.tools.list_ports
+# […]
 
-#Global scope
+__author__ = "Jonathan Woolf"
+__credits__ = "Jonathan Woolf"
+__license__ = "GPL"
+__version__ = "3.0"
+__maintainer__ = "Jonathan Woolf"
+__email__ = "jwool003@ucr.edu"
+__status__ = 'alpha'
+
+# Global scope
 startTime = -1
+# […]
 
-#Pass in UTC string, output PT string
+# Pass in UTC string, output PT string
 def utcToPT(utc):
-    #PT is 17hours ahead of UTC
+    # PT is 17hours ahead of UTC
     PT = 170000 + int(float(utc))
     if(PT >= 240000):
         PT = PT - 240000
@@ -17,7 +34,7 @@ def utcToPT(utc):
             PT = "0" + str(PT)
     return(str(PT))
 
-#Pass in DMS and direction, output DD
+# Pass in DMS and direction, output DD
 def decimalDegrees(dms, direction):
     DD = int(float(dms)/100)
     SS = float(dms) - DD * 100
@@ -26,38 +43,38 @@ def decimalDegrees(dms, direction):
     tmp1 = len(str(int(DD)))
     tmp2 = len(str(DD))
 
-    #Rounds DD (decimal degrees) for more consistent values
+    # Rounds DD (decimal degrees) for more consistent values
     if((tmp1 == 1 and tmp2 < 9) or (tmp1 == 2 and tmp2 < 10) or (tmp1 == 3 and tmp2 < 11)):
         DD = round(DD +  .0000001, 7)
-    #If South latitude is negative / If West longitude is negative
+    # If South latitude is negative / If West longitude is negative
     if(direction == "S" or direction == "W"):
         DD = DD * -1
     return(DD)
 
-#Opens port and resets log and speed text files
+# Opens port and resets log and speed text files
 def serialPortInit():
-    #create a list of accessible ports
+    # create a list of accessible ports
     port = ([comport.device for comport in serial.tools.list_ports.comports()])
 
-    #If no ports are accessible exit
+    # If no ports are accessible exit
     if(len(port) == 0):
         print("Error: GPS unit not found!")
         exit()
 
-    #Open port
+    # Open port
     port = serial.Serial(port[0], baudrate = 9600)
 
-    #Verify port is open
+    # Verify port is open
     if(port.is_open):
         print(port.name, "is open!")
-        #Reset log and speed files every time the python script starts
+        # Reset log and speed files every time the python script starts
         with open("log.txt", "w") as log:
             log.write("latitude, longitude, timestamp\n")
         with open("speed.txt", "w") as spd:
             spd.close()
         return(port)
 
-#Pass in active serial port, output: latitude, longitude, MPH, and timestamp
+# Pass in active serial port, output: latitude, longitude, MPH, and timestamp
 def gpsData(GPS):
     global startTime
     data = [-1] * 3
@@ -68,9 +85,9 @@ def gpsData(GPS):
         data = line.decode().split(",")
 
     if(data[0] == "$GPGGA"):
-        #Fix quality: 0 = invalid
+        # Fix quality: 0 = invalid
         if(data[6] != "0"):
-            #data[1] returns time in UTC, convert it to PT and create a timestamp
+            # data[1] returns time in UTC, convert it to PT and create a timestamp
             PT = utcToPT(data[1])
             hour = PT[0] + PT[1]
             min = PT[2] + PT[3]
@@ -84,27 +101,27 @@ def gpsData(GPS):
         data = line.decode().split(",")
 
     if(data[0] == "$GPRMC"):
-        #Status A=active or V=Void
+        # Status A=active or V=Void
         if(data[2] == "A"):
-            #Convert from DMS (degrees, minutes, seconds) to DD (decimal degrees)
+            # Convert from DMS (degrees, minutes, seconds) to DD (decimal degrees)
             latitude = decimalDegrees(data[3], data[4])
             longitude = decimalDegrees(data[5], data[6])
             #1 knot = 1.15078 miles per hour
             mph = round(1.15078 * float(int(float(data[7]))), 1)
 
-            #write MPH and timestamp to speed.txt file whenever MPH >= 0.1
+            # write MPH and timestamp to speed.txt file whenever MPH >= 0.1
             if(float(mph) >= 0.1):
                 with open("speed.txt", "a") as spd:
                     spd.write("MPH: " + str(mph) + ", Timestamp: " + timestamp + "\n")
-            #write latitude, longitude to .txt file
+            # write latitude, longitude to .txt file
             with open("pos.txt", "w") as pos:
                 pos.write("latitude, longitude, timestamp\n" + str(latitude)
                 + ", " + str(longitude) +  ", " + timestamp + "\n")
-            #write latitude, longitude, and timestamp to log.txt file every 60 seconds
+            # write latitude, longitude, and timestamp to log.txt file every 60 seconds
             if(abs(int(sec) - startTime) == 0):
                 with open("log.txt", "a") as log:
                     log.write(str(latitude) + ", " + str(longitude) + ", " + timestamp + "\n")
-            #return latitude, longitude, and timestamp
+            # return latitude, longitude, and timestamp
             return(latitude, longitude, mph, timestamp)
         else:
             print("Error: satellites not found. Dislplaying last known coordinates:")

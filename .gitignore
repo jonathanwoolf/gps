@@ -1,0 +1,8 @@
+# ignore all text files
+*.txt
+
+#ignore all html files
+*.html
+
+#ignore
+__pychache__
