@@ -5,4 +5,5 @@
 *.html
 
 #ignore
-__pychache__
+*.pyc
+__pycache__
