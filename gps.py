@@ -7,6 +7,7 @@ GPL 3.0
 """
 
 # Built-in/Generic Imports
+import os
 import serial.tools.list_ports
 # […]
 
@@ -123,9 +124,13 @@ def gpsData(GPS):
                     log.write(str(latitude) + ", " + str(longitude) + ", " + timestamp + "\n")
             # return latitude, longitude, and timestamp
             return(latitude, longitude, mph, timestamp)
+        # If status is active attempt to return last documented location
         else:
-            print("Error: satellites not found. Dislplaying last known coordinates:")
-            with open("pos.txt", "r") as pos:
-                backup = pos.read().split('\n')
-                backup = backup[1].split(", ")
-                return(float(backup[0]), float(backup[1]), 'N/A', backup[2])
+            if(os.path.exists('pos.txt')):
+                print("Error: satellites not found. Dislplaying last known coordinates:")
+                with open("pos.txt", "r") as pos:
+                    backup = pos.read().split('\n')
+                    backup = backup[1].split(", ")
+                    return(float(backup[0]), float(backup[1]), 'N/A', backup[2])
+            else:
+                print("Error: satellites not found.")
