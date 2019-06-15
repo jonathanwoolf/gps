@@ -28,12 +28,10 @@ def utcToPT(utc):
     # PT is 17hours ahead of UTC
     PT = 170000 + int(float(utc))
     if(PT >= 240000):
-        PT = PT - 240000
-        if(PT < 10000):
-            PT = "00" + str(PT)
-        elif(PT < 100000):
-            PT = "0" + str(PT)
-    return(str(PT))
+        PT = str(PT - 240000)
+    while(len(PT) < 6):
+        PT = '0' + PT
+    return(PT)
 
 # Pass in DMS and direction, output DD
 def decimalDegrees(dms, direction):
