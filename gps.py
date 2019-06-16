@@ -26,12 +26,18 @@ startTime = -1
 # Pass in UTC string, output PT string
 def utcToPT(utc):
     # PT is 17hours ahead of UTC
+    # Remove the next 3 lines to keep UTC otherwise adjust 170000 as needed
     PT = 170000 + int(float(utc))
     if(PT >= 240000):
-        PT = str(PT - 240000)
+        PT = PT - 240000
+    PT = str(PT)
     while(len(PT) < 6):
         PT = '0' + PT
-    return(PT)
+    hour = PT[0] + PT[1]
+    min = PT[2] + PT[3]
+    sec = PT[4] + PT[5]
+    timestamp = hour + ':' + min + ':' + sec
+    return(timestamp, sec)
 
 # Pass in DMS and direction, output DD
 def decimalDegrees(dms, direction):
@@ -78,7 +84,6 @@ def gpsData(GPS):
     global startTime
     data = [-1] * 3
     sec = -1
-
     while(data[0] != "$GPGGA"):
         line = GPS.readline()
         data = line.decode().split(",")
@@ -88,10 +93,8 @@ def gpsData(GPS):
         if(data[6] != "0"):
             # data[1] returns time in UTC, convert it to PT and create a timestamp
             PT = utcToPT(data[1])
-            hour = PT[0] + PT[1]
-            min = PT[2] + PT[3]
-            sec = PT[4] + PT[5]
-            timestamp = hour + ':' + min + ':' + sec
+            sec = PT[1]
+            timestamp = PT[0]
             if(startTime == -1):
                 startTime = int(sec)
 
@@ -103,6 +106,7 @@ def gpsData(GPS):
         # Status A=active or V=Void
         if(data[2] == "A"):
             # Convert from DMS (degrees, minutes, seconds) to DD (decimal degrees)
+            # Removing decimalDegrees, data[4], and data[6] will immediately revert gpsData to returning DMS
             latitude = decimalDegrees(data[3], data[4])
             longitude = decimalDegrees(data[5], data[6])
             #1 knot = 1.15078 miles per hour
