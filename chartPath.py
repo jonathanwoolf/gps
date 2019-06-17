@@ -26,58 +26,43 @@ __maintainer__ = "Jonathan Woolf"
 __email__ = "jwool003@ucr.edu"
 __status__ = 'alpha'
 
-mode = input("Please input mode: walking / vehicle\n")
+print("Press 'ctrl c' to generate a map and terminate the script.")
 
 port = gps.serialPortInit()
 data = gps.gpsData(port)
+
 latitude = data[0]
 longitude = data[1]
+
+path = [(data[0], data[1])]
 print(data)
 
 if(os.path.exists('map.html')):
     os.remove("map.html")
 
-map = pygmaps.pygmaps(data[0],data[1],14)
-map.addpoint(data[0],data[1],"# FF0000")
-map.draw('map.html')
-
 # Infinite loop until KeyboardInterrupt is detected
 try:
     while True:
         data = gps.gpsData(port)
-        if(mode == 'w' or mode == 'W' or mode == "walking" or "Walking"):
-            if((data[2] > 0.1) and (abs(latitude - data[0]) > .001 or abs(longitude - data[1]) > .001)):
-                map.addpoint(data[0],data[1],"# FF0000")
-                # list of coordinates
-                path = [(latitude, longitude),
-                        (data[0], data[1])]
-                # draw a line in b / w the given coordinates
-                # 1st argument is list of coordinates
-                # 2nd argument is colour of the line
-                print("New coordinate registered!")
-                map.addpath(path, " 0000FF")
-                map.draw('map.html')
-                print(data)
-                latitude = data[0]
-                longitude = data[1]
-        if(mode == 'v' or mode == 'V' or mode == "vehicle" or "Vehicle"):
-            if((data[2] > 0.1) and (abs(latitude - data[0]) > .01 or abs(longitude - data[1]) > .01)):
-                map.addpoint(data[0],data[1],"# FF0000")
-                # list of coordinates
-                path = [(latitude, longitude),
-                        (data[0], data[1])]
-                # draw a line in b / w the given coordinates
-                # 1st argument is list of coordinates
-                # 2nd argument is colour of the line
-                print("New coordinate registered!")
-                map.addpath(path, " 0000FF")
-                map.draw('map.html')
-                print(data)
-                latitude = data[0]
-                longitude = data[1]
-
-#'ctrl c' will close the serial port before exiting the program
+        if((data[2] > 0.1) and ((abs(latitude - data[0]) or abs(longitude - data[1])) >= .0005)):
+            # list of coordinates
+            path.append((data[0], data[1]))
+            print("New coordinate registered!")
+            print(data)
+            latitude = data[0]
+            longitude = data[1]
+#'ctrl c' will generate the map and close the serial port before exiting the program
 except KeyboardInterrupt:
+        centerLat = (path[0][0] + latitude) / 2
+        centerLong = (path[0][1] + longitude) / 2
+        map = pygmaps.pygmaps(centerLat, centerLong, 14)
+        map.addpoint(path[0][0], path[0][1], "# FF0000")
+        map.addpoint(latitude, longitude, "# FF0000")
+        # draw a line in b / w the given coordinates
+        # 1st argument is list of coordinates
+        # 2nd argument is colour of the line
+        map.addpath(path, " 0000FF")
+        map.draw('map.html')
         port.close()
         if(port.is_open == False):
             print()
