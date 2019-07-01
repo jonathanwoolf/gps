@@ -1,9 +1,10 @@
 # Author: Jonathan Woolf jwool003@ucr.edu
 
-This code reads data from the serial port connected to your <a href="https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=sr_1_8?keywords=gps+usb&qid=1560277792&s=gateway&sr=8-8">GPS device</a>, for example "ttyACM0", and calls the function "gpsData()", which returns latitude, longitude, MPH, and a timestamp. The function also outputs data to pos.txt, log.txt (every 60 seconds), and speed.txt (when speed > 0 MPH).
+This GPS package is compatible with all NMEA 0183 compliant <a href="https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=sr_1_8?keywords=gps+usb&qid=1560277792&s=gateway&sr=8-8">USB GPS receivers</a>. When called, the gpsData() function connects to the active port, for example "ttyACM0", to read in NMEA sentences and return latitude, longitude, MPH, and a timestamp in PST. The function also outputs data to three separate text files. Pos.txt will always store the most recent position of the device, log.txt will maintain a log of position and speed that is updated once per minute, and speed.txt will keep a log that only updates as the device moves.
 
- 
-For convenience, the function in the example script is called whithin an infinite loop that is nested in a try / except block and the return statement is printed to terminal. Type 'ctrl c' to guarantee that the serial port is closed when you end the program.
+In the example script, gpsData() is called whithin an infinite loop that is nested in a try / except block and the return statement is printed to terminal. Type 'ctrl c' to guarantee that the serial port is closed when you end the program.
+
+The final script included is chartPath.py which combines the functionality of gps.py with pygmaps.py to generate an html map which shows the device's journey from point A to point B. Simply run the scipt at your starting location and press 'ctr c' when you have reached your destination. 
 
 ## Give yourself permanent access to the port:
     # Discover which serial port is in use
@@ -24,5 +25,4 @@ For convenience, the function in the example script is called whithin an infinit
     import gps
     port = gps.serialPortInit()
     gps.gpsData(port)
-#### Run example script
-    python example.py
+
