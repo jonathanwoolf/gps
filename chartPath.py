@@ -44,7 +44,7 @@ if(os.path.exists('map.html')):
 try:
     while True:
         data = gps.gpsData(port)
-        if((data[2] > 0.1) and ((abs(latitude - data[0]) or abs(longitude - data[1])) >= .0005)):
+        if((abs(latitude - data[0]) or abs(longitude - data[1])) >= .0001):
             # list of coordinates
             path.append((data[0], data[1]))
             print("New coordinate registered!")

@@ -83,6 +83,7 @@ def serialPortInit():
 def gpsData(GPS):
     global startTime
     data = [-1] * 3
+    timestamp = "-1"
     sec = -1
     while(data[0] != "$GPGGA"):
         line = GPS.readline()
