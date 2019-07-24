@@ -1,6 +1,6 @@
 # Author: Jonathan Woolf jwool003@ucr.edu
 
-This GPS package is compatible with all NMEA 0183 compliant <a href="https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=sr_1_8?keywords=gps+usb&qid=1560277792&s=gateway&sr=8-8">USB GPS receivers</a>. When called, the gpsData() function connects to the active port, for example "ttyACM0", to read in NMEA sentences and return latitude, longitude, MPH, and a timestamp in PST. The function also outputs data to three separate text files. Pos.txt will always store the most recent position of the device, log.txt will maintain a log of position and speed that is updated once per minute, and speed.txt will keep a log that only updates as the device moves.
+This GPS package is compatible with all NMEA 0183 compliant <a href="https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=sr_1_8?keywords=gps+usb&qid=1560277792&s=gateway&sr=8-8">USB GPS receivers</a>. When called, the gpsData() function connects to the active port, for example "ttyACM0", to read in NMEA sentences and return latitude, longitude, MPH, timestamp in PST, and the date. The function also outputs data to three separate text files. Pos.txt will always store the most recent position of the device, log.txt will maintain a log of position and speed that is updated once per minute, and speed.txt will keep a log that only updates as the device moves.
 
 In the example script, getIPAddress() prints out the IP address of the device, then gpsData(), whithin an infinite loop nested in a try / except block, prints its return statement to terminal. Type 'ctrl c' to guarantee that the port is closed when you end the program.
 
@@ -25,4 +25,3 @@ The final script included is chartPath.py which combines the functionality of gp
     import gps
     port = gps.serialPortInit()
     gps.gpsData(port)
-
