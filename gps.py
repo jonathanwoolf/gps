@@ -8,6 +8,7 @@ GPL 3.0
 
 # Built-in/Generic Imports
 import os
+import socket
 import serial.tools.list_ports
 # […]
 
@@ -55,6 +56,27 @@ def decimalDegrees(dms, direction):
     if(direction == "S" or direction == "W"):
         DD = DD * -1
     return(DD)
+
+# Obtain the IP address of the device
+def getIPAddress():
+    # Create a new socket using the default socket address (AF_INET)
+    # The socket type SOCK_DGRAM is used over the more robust SOCK_STREAM to reduce computer and network stress
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # Try to print the IP address and write it to the backup file
+    try:
+        s.connect(("8.8.8.8", 80))
+        return(s.getsockname()[0])
+        with open("ip.txt", "w") as ip:
+            ip.write(s.getsockname()[0])
+            s.close()
+    # If the connection fails, read the IP from backup or print IP address not found
+    except:
+        if(os.path.exists('ip.txt')):
+            with open("ip.txt", "r") as ip:
+                return(ip.read())
+        else:
+            return("IP address not found!")
 
 # Opens port and resets log and speed text files
 def serialPortInit():

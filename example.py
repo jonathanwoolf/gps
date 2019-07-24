@@ -18,7 +18,12 @@ __maintainer__ = "Jonathan Woolf"
 __email__ = "jwool003@ucr.edu"
 __status__ = 'alpha'
 
+# Initialize port and get the IP address
 port = gps.serialPortInit()
+ip = gps.getIPAddress()
+
+print(ip)
+
 
 # Infinite loop until KeyboardInterrupt is detected
 try:
