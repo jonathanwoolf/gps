@@ -132,6 +132,13 @@ def gpsData(GPS):
             # Removing decimalDegrees, data[4], and data[6] will immediately revert gpsData to returning DMS
             latitude = decimalDegrees(data[3], data[4])
             longitude = decimalDegrees(data[5], data[6])
+
+            # Get date
+            day = data[9][0] + data[9][1]
+            month = data[9][2] + data[9][3]
+            year = data[9][4] + data[9][5]
+            date = day + "/" + month + "/" + year
+
             #1 knot = 1.15078 miles per hour
             mph = round(1.15078 * float(int(float(data[7]))), 1)
 
@@ -142,13 +149,13 @@ def gpsData(GPS):
             # write latitude, longitude to .txt file
             with open("pos.txt", "w") as pos:
                 pos.write("latitude, longitude, timestamp\n" + str(latitude)
-                + ", " + str(longitude) +  ", " + timestamp + "\n")
+                + ", " + str(longitude) +  ", " + timestamp + date + "\n")
             # write latitude, longitude, and timestamp to log.txt file every 60 seconds
             if(abs(int(sec) - startTime) == 0):
                 with open("log.txt", "a") as log:
-                    log.write(str(latitude) + ", " + str(longitude) + ", " + timestamp + "\n")
+                    log.write(str(latitude) + ", " + str(longitude) + ", " + timestamp + date + "\n")
             # return latitude, longitude, and timestamp
-            return(latitude, longitude, mph, timestamp)
+            return(latitude, longitude, mph, timestamp, date)
         # If status is active attempt to return last documented location
         else:
             if(os.path.exists('pos.txt')):
@@ -156,6 +163,6 @@ def gpsData(GPS):
                 with open("pos.txt", "r") as pos:
                     backup = pos.read().split('\n')
                     backup = backup[1].split(", ")
-                    return(float(backup[0]), float(backup[1]), 'N/A', backup[2])
+                    return(float(backup[0]), float(backup[1]), 'N/A', backup[2], backup[3])
             else:
                 print("Error: satellites not found.")
